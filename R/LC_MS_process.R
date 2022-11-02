@@ -2,9 +2,7 @@
 #'
 #' Process the raw feature table data from LC-MS and make it ready for Metabolome-wide Association Study (MWAS) analysis
 #' @import dplyr
-#' @import tidyr
 #' @import readr
-#' @import data.table
 #' @param raw_data The raw feature table file with columns representing samples and rows representing features (metabolites)
 #' @param sample_id_file The sample id file that links the sample names with the participant names
 #' @param metabolite_start_column The number of the column where metabolites are starting. If metabolite data is starting from column 10, the metabolite_start_column=10
