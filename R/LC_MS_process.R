@@ -19,8 +19,17 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
 
   #######Step 1.1 Import and Clean the Metabolomic Feature Table###########
   ##Read in the raw feature table and sample id file
-  ft_data = read_delim(raw_data)
-  infofile = read_delim(sample_id_file)
+  if (is.character(raw_data) == TRUE){
+    ft_data = data.table::fread(raw_data)
+  } else {
+    ft_data = raw_data
+  }
+  
+  if (is.character(sample_id_file) == TRUE){
+    infofile = data.table::fread(sample_id_file)
+  } else {
+    infofile = sample_id_file
+  }
 
   ##Ensure data quality - filter out features appear less than 5% of all samples & median_CV > 30
   sample_appear = ceiling((dim(ft_data)[2]-10)*0.05)
@@ -91,7 +100,7 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
   #######Step 1.4 Calculate Mean Intensity for each metabolic feature across the number of replicates in Metabolomic Feature Table
   if (is.null(replicates) != TRUE){
     column = 1:ncol(intensity)
-    ind = as.data.frame(matrix(colnum,byrow = F,nrow = replicates))
+    ind = as.data.frame(matrix(column,byrow = F,nrow = replicates))
     means = as.data.frame(lapply(ind, function(i) rowMeans(intensity[,i],na.rm = T)))
     colnames(means) = colnames(intensity)[c(T,rep(F,2))]
     mdat_comp = cbind(mdat[,1:(metabolite_start_column-1)],means)

@@ -4,8 +4,8 @@
 #' @import dplyr
 #' @import readr
 #' @import limma
-#' @param DATA_comp The merged, complete data with demographic data and feature table data path or already-read data. if the data is not read, it has to be csv.
-#' @param DATA_met The cleaned feature table data ready for MWAS analysis. It should be data path or already-read data. if the data is not read, it has to be csv.
+#' @param DATA_comp The merged, complete data with demographic data and feature table data path or already-read data. The data can be csv or txt.
+#' @param DATA_met The cleaned feature table data ready for MWAS analysis. It should be data path or already-read data. The data can be csv or txt.
 #' @param output_name The name of output file using this function. For example, "Met_meantri_log2_HILIC22"
 #' @param met_start_colnum The number of the column where metabolites are starting. If metabolite data is starting from column 10, the met_start_colnum=10
 #' @param met_end_colnum The number of the column where metabolites are ending If metabolite data is ending at column 13414, the met_end_colnum=13414
@@ -19,13 +19,13 @@
 limma_lm = function(DATA_comp, DATA_met, output_name, met_start_colnum, met_end_colnum, outcome, confounders){
 
   if (is.character(DATA_comp) == TRUE){
-    DATA_comp = read_csv(DATA_comp)
+    DATA_comp = data.table::fread(DATA_comp)
   } else {
     DATA_comp = DATA_comp
   }
 
   if (is.character(DATA_met) == TRUE){
-    DATA_met = read_csv(DATA_met)
+    DATA_met = data.table::fread(DATA_met)
   } else {
     DATA_met = DATA_met
   }

@@ -15,9 +15,9 @@ limma_lm(
 )
 }
 \arguments{
-\item{DATA_comp}{The merged, complete data with demographic data and feature table data path or already-read data. if the data is not read, it has to be csv.}
+\item{DATA_comp}{The merged, complete data with demographic data and feature table data path or already-read data. The data can be csv or txt.}
 
-\item{DATA_met}{The cleaned feature table data ready for MWAS analysis. It should be data path or already-read data. if the data is not read, it has to be csv.}
+\item{DATA_met}{The cleaned feature table data ready for MWAS analysis. It should be data path or already-read data. The data can be csv or txt.}
 
 \item{output_name}{The name of output file using this function. For example, "Met_meantri_log2_HILIC22"}
 
