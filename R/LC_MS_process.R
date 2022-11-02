@@ -26,7 +26,7 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
   sample_appear = ceiling((dim(ft_data)[2]-10)*0.05)
 
   if (!("NumPres.All.Samples" %in% colnames(ft_data))){
-    NumPres.All.Samples = rowSums(ft_data != 0) - metabolite_start_column
+    NumPres.All.Samples = rowSums(ft_data != 0) - (metabolite_start_column-1)
     ft_data$NumPres.All.Samples = NumPres.All.Samples
     relocate(ft_data, NumPres.All.Samples)
     metabolite_start_column = metabolite_start_column + 1
@@ -104,6 +104,8 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
     log2(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
   } else if (transformation == "log10"){
     log10(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
+  } else if (transformation != "log10" | transformation != "log2"){
+    stop("Data transformation is mandatory. Choose transformation='log10' or transformation='log2'")
   }
 
   mdat_comp_log2 = cbind(mdat_comp[,1:(metabolite_start_column-1)], mdat_comp_log)
