@@ -36,7 +36,7 @@ The **pandaOmics** package currently contains the following key functions:
 ___
 #### LC_MS_process
 ```
-limma_lm(DATA_comp = finaldt1_cleaned, DATA_met = metlog, output_name = "ILD_HILIC_limma_test", met_start_colnum = 15, met_end_colnum = 25318, outcome = "ILD1", confounders=c("Age_at_enrollment", "Gender", "BMI_on_enrollment"))
+LC_MS_process(raw_data, sample_id_file, metabolite_start_column=10, replicates=NULL, transformation="log2", imputation=TRUE, output_name)
 
 ```
 
