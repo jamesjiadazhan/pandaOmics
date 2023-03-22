@@ -6,7 +6,7 @@
 \usage{
 limma_lm(
   DATA_comp,
-  DATA_met,
+  DATA_met = NULL,
   output_name,
   met_start_colnum,
   met_end_colnum,
@@ -33,8 +33,9 @@ limma_lm(
 The multiple regression results with FDR correction
 }
 \description{
-Perform Metabolome-wide Association Study (MWAS) analysis using multiple linear regression with FDR correction with the limma algorithm
+Perform Metabolome-wide Association Study (MWAS) analysis using multiple linear regression with FDR correction with the limma algorithm. Other omics can also be used, such as metals from ICP-MS and 16s rRNA microbiome data
 }
 \examples{
-limma_lm(DATA_comp = finaldt1_cleaned, DATA_met = metlog, output_name = "ILD_HILIC_limma_test", met_start_colnum = 15, met_end_colnum = 25318, outcome = "ILD1", confounders=c("Age_at_enrollment", "Gender", "BMI_on_enrollment"))
+data(stanford_clinical_metabolome)
+limma_lm(DATA_comp=stanford_clinical_metabolome, DATA_met=NULL, output_name="stanford_clinical_metabolome", met_start_colnum=58, met_end_colnum=781, outcome="CL4.x", confounders=c("A1C", "GLU"))
 }

@@ -35,6 +35,3 @@ The complete and clean feature table that is ready for MWAS analysis
 \description{
 Process the raw feature table data from LC-MS and make it ready for Metabolome-wide Association Study (MWAS) analysis
 }
-\examples{
-LC_MS_process(raw_data, sample_id_file, metabolite_start_column=10, replicates=NULL, transformation="log2", imputation=TRUE, output_name)
-}

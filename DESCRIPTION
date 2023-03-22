@@ -9,8 +9,10 @@ Description: Processing and analyzing LC-MS data
 License: GNU General Public License v3.0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports: 
     dplyr,
     limma,
     readr
+Depends: 
+    R (>= 2.10)

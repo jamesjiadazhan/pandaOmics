@@ -11,8 +11,6 @@
 #' @param imputation Whether the missing data due to transformation should be imputated using the QRILC method. Default=NULL. To use imputation, use imputation=TRUE.
 #' @param output_name The name of output file using this function. For example, "Met_meantri_log2_HILIC22"
 #' @return The complete and clean feature table that is ready for MWAS analysis
-#' @examples
-#' LC_MS_process(raw_data, sample_id_file, metabolite_start_column=10, replicates=NULL, transformation="log2", imputation=TRUE, output_name)
 #' @export
 
 LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, replicates=NULL, transformation, imputation=NULL, output_name){
