@@ -32,6 +32,11 @@ The **pandaOmics** package currently contains the following key functions:
 
 >`limma_lm()`: Perform Metabolome-wide Association Study (MWAS) analysis using multiple linear regression with FDR correction with the limma algorithm. Limma is intended to borrow information from the entire study population to overcome the problem of small sample sizes that small-variance features would be more likely to be statistically significant 
 
+>`multi_reg_2omics_fdr()`: perform Multi-Regression Analysis for 2-Omics Data with FDR Correction linking the significant features from the 1st omics datga to all the 2nd omics data
+
+>`Hmap_metapone()`: perform a summary of significant features from metapone pathway tables and generate a heatmap for p-value less than 0.05
+
+
 ### Examples:
 ___
 #### LC_MS_process
@@ -41,9 +46,30 @@ LC_MS_process(raw_data, sample_id_file, metabolite_start_column=10, replicates=N
 ```
 
 #### limma_lm
+
+##### for metabolomics
 ```
 limma_lm(DATA_comp = finaldt1_cleaned, DATA_met = metlog, output_name = "ILD_HILIC_limma_test", met_start_colnum = 15, met_end_colnum = 25318, outcome = "ILD1", confounders=c("Age_at_enrollment", "Gender", "BMI_on_enrollment"))
+```
 
+##### for other omics (metals from ICP-MS, microbiome)
+```
+limma_lm(DATA_comp = finaldt1_cleaned, DATA_met = NULL, output_name = "ILD_HILIC_limma_test", met_start_colnum = 15, met_end_colnum = 25318, outcome = "ILD1", confounders=c("Age_at_enrollment", "Gender", "BMI_on_enrollment"))
+```
+
+#### multi_reg_2omics_fdr
+```
+multi_reg_2omics_fdr(data_comp=METAL_HILIC_RAW_CLEAN,
+                     sig_feature_list=ILD2_HILIC_limma_FDR02_1,
+                     outcome_start_column = 2,
+                     outcome_end_column = 24,
+                     confounders = c("Age_at_enrollment", "Gender", "BMI_on_enrollment"),
+                     suffix="HILIC")
+```
+
+#### Hmap_metapone
+```
+Hmap_metapone(path_heatmap="james/data_folder", pathway_focus="CANCER")
 ```
 
 ### Additional notes
