@@ -49,12 +49,13 @@ LC_MS_process(raw_data, sample_id_file, metabolite_start_column=10, replicates=N
 
 ##### for metabolomics
 ```
-limma_lm(DATA_comp = finaldt1_cleaned, DATA_met = metlog, output_name = "ILD_HILIC_limma_test", met_start_colnum = 15, met_end_colnum = 25318, outcome = "ILD1", confounders=c("Age_at_enrollment", "Gender", "BMI_on_enrollment"))
+limma_lm(DATA_comp=stanford_clinical_metabolome, DATA_met=metabolomics_feature_table, output_name="stanford_clinical_metabolome", met_start_column=58, met_end_column=781, outcome="CL4.x", confounders=c("A1C", "GLU"))
 ```
 
 ##### for other omics (metals from ICP-MS, microbiome)
 ```
-limma_lm(DATA_comp = finaldt1_cleaned, DATA_met = NULL, output_name = "ILD_HILIC_limma_test", met_start_colnum = 15, met_end_colnum = 25318, outcome = "ILD1", confounders=c("Age_at_enrollment", "Gender", "BMI_on_enrollment"))
+limma_lm(DATA_comp=stanford_clinical_metabolome, DATA_met=NULL, output_name="stanford_clinical_metabolome", met_start_column=58, met_end_column=781, outcome="CL4.x", confounders=c("A1C", "GLU"))
+
 ```
 
 #### multi_reg_2omics_fdr
