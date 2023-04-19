@@ -125,14 +125,24 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
 
   if (imputation == TRUE){
     mdat_comp_log2 = imputeLCMD::impute.QRILC(mdat_comp_log2)
-    mdat_comp_log2=as.data.frame(mdat_comp_log2[1])
+    mdat_comp_log2 = as.data.frame(mdat_comp_log2[1])
     print("Imputation completed. The imputation method is: QRILC")
+    # Remove 'X' from column names if it is the first character
+    colnames(mdat_comp_log2) <- gsub("^X", "", colnames(mdat_comp_log2))
   } else {
     print("Imputation is not performed as imputation is set to FALSE or NULL.")
   }
 
 
   print("Step 1.5 log-transformed the data for approximating normal distribution finished")
+
+
+  # Add row numbers by creating a new column called "Row_Number"
+  mdat_comp_log2$metabolite <- 1:nrow(mdat_comp_log2)
+  
+  # Move "Row_Number" column to the first position
+  mdat_comp_log2 <- dplyr::relocate(mdat_comp_log2, metabolite, .before = 1)
+
 
   ##The feature table is complete, clean and now ready for MWAS analysis
   ##save the dataset
@@ -141,7 +151,7 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
   output_name_csv = paste(wd, "/", output_name, ".csv", sep="")
 
   ##Save MWAS Result
-  write.csv(mdat_comp_log2, output_name_csv)
+  write_csv(mdat_comp_log2, output_name_csv)
 
   print(paste("Completed! Output is saved in your current dictionary,", wd, ",using your input output_name,", output_name))
 
