@@ -127,7 +127,10 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
     mdat_comp_log2 = imputeLCMD::impute.QRILC(mdat_comp_log2)
     mdat_comp_log2=as.data.frame(mdat_comp_log2[1])
     print("Imputation completed. The imputation method is: QRILC")
+  } else {
+    print("Imputation is not performed as imputation is set to FALSE or NULL.")
   }
+
 
   print("Step 1.5 log-transformed the data for approximating normal distribution finished")
 
