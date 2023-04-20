@@ -13,7 +13,7 @@
 #' @return The complete and clean feature table that is ready for MWAS analysis
 #' @export
 
-LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, replicates=NULL, transformation, imputation=NULL, output_name){
+LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=FALSE, replicates=NULL, transformation, imputation=NULL, output_name){
 
   #######Step 1.1 Import and Clean the Metabolomic Feature Table###########
   ##Read in the raw feature table and sample id file
@@ -39,7 +39,12 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, repl
     metabolite_start_column = metabolite_start_column + 1
   }
 
-  mdat = subset(ft_data, ft_data$median_CV<=30 & ft_data$NumPres.All.Samples>sample_appear)
+  if (QC != FALSE){
+    mdat = subset(ft_data, ft_data$median_CV<=30 & ft_data$NumPres.All.Samples>sample_appear)
+  } else {
+    mdat = ft_data
+  }
+  
 
   print("Step 1.1 Import and Clean the Metabolomic Feature Table finished")
 
