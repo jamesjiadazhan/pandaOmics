@@ -112,12 +112,14 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=F
   print("Step 1.4 Calculate Mean Intensity for each metabolic feature across the number of replicates finished")
 
   #######Step 1.5 log-transformed the data for approximating normal distribution and impute data as needed
-  mdat_comp_log = if (transformation == "log2"){
-    log2(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
-    print("log2 transformation is used to normalize the data")
-  } else if (transformation == "log10"){
-    log10(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
-    print("log10 transformation is used to normalize the data")
+  mdat_comp_log = if (is.null(transformation) == FALSE){
+    if (transformation == "log2"){
+        log2(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
+        print("log2 transformation is used to normalize the data")
+      } else if (transformation == "log10"){
+        log10(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
+        print("log10 transformation is used to normalize the data")
+      }
   } else {
     mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]]
     print("no transformation is used to normalize the data")
