@@ -114,15 +114,15 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=F
   #######Step 1.5 log-transformed the data for approximating normal distribution and impute data as needed
   mdat_comp_log = if (is.null(transformation) == FALSE){
     if (transformation == "log2"){
-        log2(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
         print("log2 transformation is used to normalize the data")
+        log2(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
       } else if (transformation == "log10"){
-        log10(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
         print("log10 transformation is used to normalize the data")
+        log10(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
       }
   } else {
-    mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]]
     print("no transformation is used to normalize the data")
+    mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]]
   }
 
   mdat_comp_log2 = cbind(mdat_comp[,1:(metabolite_start_column-1)], mdat_comp_log)
