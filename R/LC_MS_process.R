@@ -7,13 +7,13 @@
 #' @param sample_id_file The sample id file that links the sample names with the participant names
 #' @param metabolite_start_column The number of the column where metabolites are starting. If metabolite data is starting from column 10, the metabolite_start_column=10
 #' @param replicates The number of replicates you performed for each sample. The default is NULL, meaning you don't have technical replicates. If you have 3 replicates for each sample, it should be replicates=3.
-#' @param transformation How you would like transform the data for normalization. "log2" and "log10" are available as options
+#' @param transformation How you would like transform the data for normalization. "log2" and "log10" are available as options. Default=NULL.
 #' @param imputation Whether the missing data due to transformation should be imputated using the QRILC method. Default=NULL. To use imputation, use imputation=TRUE.
 #' @param output_name The name of output file using this function. For example, "Met_meantri_log2_HILIC22"
 #' @return The complete and clean feature table that is ready for MWAS analysis
 #' @export
 
-LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=FALSE, replicates=NULL, transformation, imputation=NULL, output_name){
+LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=FALSE, replicates=NULL, transformation=NULL, imputation=NULL, output_name){
 
   #######Step 1.1 Import and Clean the Metabolomic Feature Table###########
   ##Read in the raw feature table and sample id file
@@ -114,10 +114,13 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=F
   #######Step 1.5 log-transformed the data for approximating normal distribution and impute data as needed
   mdat_comp_log = if (transformation == "log2"){
     log2(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
+    print("log2 transformation is used to normalize the data")
   } else if (transformation == "log10"){
     log10(mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]])
-  } else if (transformation != "log10" | transformation != "log2"){
-    stop("Data transformation is mandatory. Choose transformation='log10' or transformation='log2'")
+    print("log10 transformation is used to normalize the data")
+  } else {
+    mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]]
+    print("no transformation is used to normalize the data")
   }
 
   mdat_comp_log2 = cbind(mdat_comp[,1:(metabolite_start_column-1)], mdat_comp_log)
