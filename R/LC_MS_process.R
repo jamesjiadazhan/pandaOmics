@@ -6,8 +6,10 @@
 #' @param raw_data The raw feature table file with columns representing samples and rows representing features (metabolites)
 #' @param sample_id_file The sample id file that links the sample names with the participant names
 #' @param metabolite_start_column The number of the column where metabolites are starting. If metabolite data is starting from column 10, the metabolite_start_column=10
+#' @param NumPres.All.Samples_cutoff The cutoff for QC that accounts for the number of presence of a metabolite in all samples, including QC, NIST, and real samples. Default=0.5
+#' @param QC Whether the QC step should be performed to filter number of presence in all samples. Default=FALSE
 #' @param replicates The number of replicates you performed for each sample. The default is NULL, meaning you don't have technical replicates. If you have 3 replicates for each sample, it should be replicates=3.
-#' @param transformation How you would like transform the data for normalization. "log2" and "log10" are available as options. Default=NULL.
+#' @param transformation The way of data transformation for normalization. "log2" and "log10" are available as options. Default=NULL.
 #' @param imputation Whether the missing data due to transformation should be imputated using the QRILC method. Default=NULL. To use imputation, use imputation=TRUE.
 #' @param output_name The name of output file using this function. For example, "Met_meantri_log2_HILIC22"
 #' @return The complete and clean feature table that is ready for MWAS analysis
