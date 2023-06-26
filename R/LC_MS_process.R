@@ -67,7 +67,6 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
   ## create a vector of all of the column names (except the first "metabolite_start_column-1" columns)
   colnames.mdat<-colnames(mdat)[metabolite_start_column:dim(mdat)[2]]
 
-  File.n <- as.data.frame(colnames.mdat)
 
   #Ensure the number of character of the mdat column names matches the number of character of the File_Name in the sample id file
   if (min(nchar(colnames.mdat)) != min(nchar(infofile$File_Name))){
@@ -79,7 +78,9 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
         stop(paste("Your feature table column names (sample id) cannot match the sample id in the sample id file. For example, the first of your sample id in the feature table is", colnames.mdat[1], "but the first of your sample id in the sample id file is", infofile$File_Name[1], "Please make sure they are the same in the first place."))
         }
     }
-    
+
+  # Make the colnames.mdat as a data frame
+  File.n <- as.data.frame(colnames.mdat)
 
   #Cleaning up the column title - want to use the same name as the file you are merging to
   colnames(File.n)<-'File_Name'
