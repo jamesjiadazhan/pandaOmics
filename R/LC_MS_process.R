@@ -17,8 +17,9 @@
 
 LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumPres.All.Samples_cutoff = 0.5, QC=FALSE, replicates=NULL, transformation=NULL, imputation=NULL, output_name){
 
-  #######Step 1.1 Import and Clean the Metabolomic Feature Table###########
-  ##Read in the raw feature table and sample id file
+  # Step 1.1: Import and Clean the Metabolomic Feature Table
+  
+  # Read in the raw feature table and sample id file
   if (is.character(raw_data) == TRUE){
     ft_data = data.table::fread(raw_data)
   } else {
@@ -31,7 +32,7 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
     infofile = sample_id_file
   }
 
-  ##Ensure data quality - filter out features appear less than 50% of all samples
+  # Quality control: filter out features appear less than 50% of all samples
   sample_appear = ceiling((dim(ft_data)[2] - (metabolite_start_column - 1)) * NumPres.All.Samples_cutoff)
 
   # Create the NumPres.All.Samples column
@@ -42,33 +43,30 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
     metabolite_start_column = metabolite_start_column + 1
   }
 
-  # perform QC as needed
+  # Perform QC as needed
   if (QC != FALSE){
     mdat = subset(ft_data, ft_data$NumPres.All.Samples>sample_appear)
   } else {
     mdat = ft_data
   }
   
-
   print("Step 1.1 Import and Clean the Metabolomic Feature Table finished")
 
-  #######Step 1.2 Merge sample id files with the feature table
-
-  ##Import the sample sequence ID file
+  # Step 1.2: Merge sample id files with the feature table
+  
+  # Rename the columns of the sample id file for merging
   colnames(infofile)[1]='File_Name'
   colnames(infofile)[2]='Sample_ID'
 
-  ##Check the correctness of the sample id file
+  # Check for duplicate sample IDs
   if (!is.na(table(duplicated(infofile$Sample_ID))['TRUE'])){
     stop("Your sample ID column has duplicates. Please clean the column first")
   }
 
-  ###Merge Info file with feature table sample column names
-  ## create a vector of all of the column names (except the first "metabolite_start_column-1" columns)
+  # Create a vector of all of the column names (except the first "metabolite_start_column-1" columns)
   colnames.mdat<-colnames(mdat)[metabolite_start_column:dim(mdat)[2]]
 
-
-  #Ensure the number of character of the mdat column names matches the number of character of the File_Name in the sample id file
+  # Check if the number of characters in the mdat column names matches the number of characters of the File_Name in the sample id file
   if (min(nchar(colnames.mdat)) != min(nchar(infofile$File_Name))){
     print("Your feature table column names (sample id) cannot match the sample id in the sample id file. Trying removing the last 6 characters...")
     # remove the last 6 characters of the column names in the feature table
@@ -79,40 +77,39 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
         }
     }
 
-  # Make the colnames.mdat as a data frame
+  # Convert the column names in the feature table to a data frame for merging
   File.n <- as.data.frame(colnames.mdat)
 
-  #Cleaning up the column title - want to use the same name as the file you are merging to
+  # Rename the column title to match the file you are merging to
   colnames(File.n)<-'File_Name'
 
-  ##Merge two datasets and see if the sample info matches with the column names in the feature table
-  #need to do this to make sure the data is in the correct order
+  # Merge the two datasets (File.n and infofile) by 'File_Name', preserving the order of the feature table
   infofile.mdat <- merge.data.frame(File.n,infofile,by ='File_Name',all.x = T,sort = F)
 
+  # If there are any missing values in the second column of the merged data, stop and return an error
   if (sum(is.na(infofile.mdat[,2])) != 0){
     stop("There is a discrepancy between the feature table and sample id file that the merging process failed. Please check those files.")
   }
 
   print("Step 1.2 Merge sample id files with the feature table finished")
 
-  #######Step 1.3 Replace missing values (0) with NA
-
-  ##Create a matrix with no first "metabolite_start_column-1" columns (only include raw sample ID)
+  # Step 1.3: Replace missing values (0) with NA
+  
+  # Create a matrix with no first "metabolite_start_column-1" columns (only include raw sample ID)
   intensity <- as.matrix(mdat[,metabolite_start_column:dim(mdat)[2]])
 
-  ##Replace missing values (0) with NA
+  # Replace missing values (0) with NA
   intensity[intensity == 0] <- NA
 
   print("Step 1.3 Replace missing values (0) with NA finished")
 
-  ##Replacing the colnames in the feature table *aka, sequence ID) with sample ID
-  colnames(intensity) <- infofile.mdat$Sample_ID #assigning sample ID names to the column names in intensity
+  # Replace the column names in the feature table (sequence ID) with sample ID
+  colnames(intensity) <- infofile.mdat$Sample_ID 
 
-  ##Add the first "metabolite_start_column-1" columns back to form a complete feature table data with cleaned sample ID
+  # Add the first "metabolite_start_column-1" columns back to form a complete feature table data with cleaned sample ID
   mdat_comp <- cbind(mdat[,1:(metabolite_start_column-1)],intensity)
 
-  # Optional, if mean intensity has not been calculated
-  #######Step 1.4 Calculate Mean Intensity for each metabolic feature across the number of replicates in Metabolomic Feature Table
+  # Step 1.4: Calculate Mean Intensity for each metabolic feature across the number of replicates in Metabolomic Feature Table (optional, if mean intensity has not been calculated)
   if (is.null(replicates) != TRUE){
     column = 1:ncol(intensity)
     ind = as.data.frame(matrix(column,byrow = F,nrow = replicates))
@@ -123,7 +120,7 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
 
   print("Step 1.4 Calculate Mean Intensity for each metabolic feature across the number of replicates finished")
 
-  #######Step 1.5 log-transformed the data for approximating normal distribution and impute data as needed
+  # Step 1.5: Log-transform the data for approximating normal distribution and impute data as needed
   mdat_comp_log = if (is.null(transformation) == FALSE){
     if (transformation == "log2"){
         print("log2 transformation is used to normalize the data")
@@ -137,14 +134,16 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
     mdat_comp[,metabolite_start_column:dim(mdat_comp)[2]]
   }
 
+  # Combine the first "metabolite_start_column-1" columns with the log transformed data
   mdat_comp_log2 = cbind(mdat_comp[,1:(metabolite_start_column-1)], mdat_comp_log)
 
-  ###Convert all NaN values to NA
+  # Convert all NaN values to NA
   is.nan.data.frame = function(x)
     do.call(cbind, lapply(x, is.nan))
 
   mdat_comp_log2[is.nan(mdat_comp_log2)] = NA
 
+  # If imputation is TRUE, perform imputation using the QRILC method
   if (imputation == TRUE){
     mdat_comp_log2 = imputeLCMD::impute.QRILC(mdat_comp_log2)
     mdat_comp_log2 = as.data.frame(mdat_comp_log2[1])
@@ -155,9 +154,7 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
     print("Imputation is not performed as imputation is set to FALSE or NULL.")
   }
 
-
   print("Step 1.5 log-transformed the data for approximating normal distribution finished")
-
 
   # Add row numbers by creating a new column called "Row_Number"
   mdat_comp_log2$metabolite <- 1:nrow(mdat_comp_log2)
@@ -165,14 +162,12 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
   # Move "Row_Number" column to the first position
   mdat_comp_log2 <- dplyr::relocate(mdat_comp_log2, metabolite, .before = 1)
 
-
-  ##The feature table is complete, clean and now ready for MWAS analysis
-  ##save the dataset
+  # Save the cleaned, transformed, and possibly imputed dataset
   wd = getwd()
 
   output_name_csv = paste(wd, "/", output_name, ".csv", sep="")
 
-  ##Save MWAS Result
+  # Save MWAS Result
   write_csv(mdat_comp_log2, output_name_csv)
 
   print(paste("Completed! Output is saved in your current dictionary,", wd, ",using your input output_name,", output_name))
