@@ -13,7 +13,7 @@
 #' @return The complete and clean feature table that is ready for MWAS analysis
 #' @export
 
-LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=FALSE, replicates=NULL, transformation=NULL, imputation=NULL, output_name){
+LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumPres.All.Samples_cutoff = 0.5, QC=FALSE, replicates=NULL, transformation=NULL, imputation=NULL, output_name){
 
   #######Step 1.1 Import and Clean the Metabolomic Feature Table###########
   ##Read in the raw feature table and sample id file
@@ -29,9 +29,10 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=F
     infofile = sample_id_file
   }
 
-  ##Ensure data quality - filter out features appear less than 5% of all samples & median_CV > 30
-  sample_appear = ceiling((dim(ft_data)[2]-10)*0.05)
+  ##Ensure data quality - filter out features appear less than 50% of all samples
+  sample_appear = ceiling((dim(ft_data)[2] - (metabolite_start_column - 1)) * NumPres.All.Samples_cutoff)
 
+  # Create the NumPres.All.Samples column
   if (!("NumPres.All.Samples" %in% colnames(ft_data))){
     NumPres.All.Samples = rowSums(ft_data != 0) - (metabolite_start_column-1)
     ft_data$NumPres.All.Samples = NumPres.All.Samples
@@ -39,8 +40,9 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, QC=F
     metabolite_start_column = metabolite_start_column + 1
   }
 
+  # perform QC as needed
   if (QC != FALSE){
-    mdat = subset(ft_data, ft_data$median_CV<=30 & ft_data$NumPres.All.Samples>sample_appear)
+    mdat = subset(ft_data, ft_data$NumPres.All.Samples>sample_appear)
   } else {
     mdat = ft_data
   }
