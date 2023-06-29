@@ -3,7 +3,7 @@
 \name{Hmap_metapone}
 \alias{Hmap_metapone}
 \title{Hmap_metapone
-Perform a summary of significant features and generate a heatmap for p-value less than 0.05}
+Perform a summary of significant features from metapone pathway tables and generate a heatmap for p-value less than 0.05}
 \usage{
 Hmap_metapone(path_heatmap, pathway_focus)
 }
@@ -17,5 +17,5 @@ A data.frame with the metabolite analysis results.
 }
 \description{
 Hmap_metapone
-Perform a summary of significant features and generate a heatmap for p-value less than 0.05
+Perform a summary of significant features from metapone pathway tables and generate a heatmap for p-value less than 0.05
 }

@@ -8,8 +8,10 @@ LC_MS_process(
   raw_data,
   sample_id_file,
   metabolite_start_column,
+  NumPres.All.Samples_cutoff = 0.5,
+  QC = FALSE,
   replicates = NULL,
-  transformation,
+  transformation = NULL,
   imputation = NULL,
   output_name
 )
@@ -21,9 +23,13 @@ LC_MS_process(
 
 \item{metabolite_start_column}{The number of the column where metabolites are starting. If metabolite data is starting from column 10, the metabolite_start_column=10}
 
+\item{NumPres.All.Samples_cutoff}{The cutoff for QC that accounts for the number of presence of a metabolite in all samples, including QC, NIST, and real samples. Default=0.5}
+
+\item{QC}{Whether the QC step should be performed to filter number of presence in all samples. Default=FALSE}
+
 \item{replicates}{The number of replicates you performed for each sample. The default is NULL, meaning you don't have technical replicates. If you have 3 replicates for each sample, it should be replicates=3.}
 
-\item{transformation}{How you would like transform the data for normalization. "log2" and "log10" are available as options}
+\item{transformation}{The way of data transformation for normalization. "log2" and "log10" are available as options. Default=NULL.}
 
 \item{imputation}{Whether the missing data due to transformation should be imputated using the QRILC method. Default=NULL. To use imputation, use imputation=TRUE.}
 

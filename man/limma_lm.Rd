@@ -8,8 +8,8 @@ limma_lm(
   DATA_comp,
   DATA_met = NULL,
   output_name,
-  met_start_colnum,
-  met_end_colnum,
+  met_start_column,
+  met_end_column,
   outcome,
   confounders
 )
@@ -21,9 +21,9 @@ limma_lm(
 
 \item{output_name}{The name of output file using this function. For example, "Met_meantri_log2_HILIC22"}
 
-\item{met_start_colnum}{The number of the column where metabolites are starting. If metabolite data is starting from column 10, the met_start_colnum=10}
+\item{met_start_column}{The number of the column where metabolites are starting. If metabolite data is starting from column 10, the met_start_column=10}
 
-\item{met_end_colnum}{The number of the column where metabolites are ending If metabolite data is ending at column 13414, the met_end_colnum=13414}
+\item{met_end_column}{The number of the column where metabolites are ending If metabolite data is ending at column 13414, the met_end_column=13414}
 
 \item{outcome}{The outcome of your interest. For example, if your interested outcome is T2D (type 2 diabetes) and the column name is T2D, outcome="T2D"}
 
@@ -37,5 +37,5 @@ Perform Metabolome-wide Association Study (MWAS) analysis using multiple linear 
 }
 \examples{
 data(stanford_clinical_metabolome)
-limma_lm(DATA_comp=stanford_clinical_metabolome, DATA_met=NULL, output_name="stanford_clinical_metabolome", met_start_colnum=58, met_end_colnum=781, outcome="CL4.x", confounders=c("A1C", "GLU"))
+limma_lm(DATA_comp=stanford_clinical_metabolome, DATA_met=NULL, output_name="stanford_clinical_metabolome", met_start_column=58, met_end_column=781, outcome="CL4.x", confounders=c("A1C", "GLU"))
 }
