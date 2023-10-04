@@ -144,7 +144,7 @@ LC_MS_process = function(raw_data, sample_id_file, metabolite_start_column, NumP
   mdat_comp_log2[is.nan(mdat_comp_log2)] = NA
 
   # If imputation is TRUE, perform imputation using the QRILC method
-  if (imputation == TRUE){
+  if (is.null(imputation) == FALSE){
     mdat_comp_log2 = imputeLCMD::impute.QRILC(mdat_comp_log2)
     mdat_comp_log2 = as.data.frame(mdat_comp_log2[1])
     print("Imputation completed. The imputation method is: QRILC")
